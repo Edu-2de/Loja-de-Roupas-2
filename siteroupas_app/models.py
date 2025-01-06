@@ -10,6 +10,10 @@ class Marca(models.Model):
       # armazena a cor principal da marca
       cor = models.CharField(max_length=10)
 
+      # Novo campo para a logo
+      logo = models.ImageField(upload_to='marcas_logos/', null=True, blank=True)
+
+
       def __str__(self):
             # Retorna o nome completo da marca como representação em texto do objeto.
             return self.nome
@@ -37,7 +41,7 @@ class Produto(models.Model):
       nome = models.CharField(max_length=50)
 
       # define a marca do produto, se adequando as marcas pedentes na tabela marcas
-      marca = models.CharField(max_length=20)
+      marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
 
       # define o preco do produto
       preco = models.CharField(max_length=20)
@@ -102,6 +106,15 @@ class CategoriaProduto(models.Model):
 
 
 
+class Banner(models.Model):
+      # Campo para armazenar a imagem do banner
+      foto = models.ImageField(upload_to='banners/')
+      
+      # Relacionamento com a marca usando ForeignKey
+      marca = models.ForeignKey(Marca, on_delete=models.CASCADE, related_name='banners')
+
+      def __str__(self):
+            return f"Banner da marca {self.marca.nome}"
 
 
 

@@ -1,0 +1,115 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.navbar-collapse {
+  flex-basis: 100%;
+  flex-grow: 0;
+  align-items: center;
+}
+.marcas {
+  width: 100%;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.novos-itens {
+  width: 90%;
+  background-color: #333;
+  height: 50vh;
+}
+.item-novo {
+  width: 20%;
+  height: 80%;
+  border-radius: 20px;
+  margin-left: 2% !important;
+  margin-top: 3% !important;
+}
+.categoria-div {
+  width: 90%;
+  background-color: #333;
+  height: 50vh;
+}
+
+.card-list .card-item {
+  list-style: none;
+  width: 20%;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-list .card-item .card-link {
+     
+    user-select: none;
+    display: flex;
+    /* background: #ffff; */
+    border-radius: 12px;
+    text-decoration: none;
+    /* border: 2px solid transparent; */
+    /* box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5); */
+    transition: 0.2s ease;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 70%;
+}
+
+.card-list .card-item .card-link:hover {
+  border-color: #537253;
+}
+
+.card-list .card-link .card-image {
+      width: 35%;
+      aspect-ratio: 9 / 9;
+      object-fit: contain;
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+}
+
+
+.card-list .card-link .badge {
+  color: #537253;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 16px 0 18px;
+  background: #dde4ff;
+  width: fit-content;
+  border-radius: 50px;
+}
+
+.card-list .card-link .card-title {
+  font-size: 1.19rem;
+  color: #000;
+  font-weight: 600;
+}
+
+.card-list .card-link .card-button {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  color: #537253;
+  margin: 30px 0 5px;
+  background: none;
+  cursor: pointer;
+  margin: 2px solid #537253;
+  transform: rotate(-45deg);
+  transition: 0.4s ease;
+}
+
+.card-list .card-link:hover .card-button {
+  color: #fff;
+  background: #537253;
+}
+
+
+.swiper-pagination-bullet-active {
+  opacity: var(--swiper-pagination-bullet-opacity, 1) !important;
+  background: var(--swiper-pagination-color, #000000) !important;
+}
