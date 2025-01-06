@@ -12,6 +12,7 @@ urlpatterns = [
     path('criar_produto/', views.criar_produto, name='criar_produto'),
     path('criar-marca/', views.criar_marca, name='criar_marca'),
     path('criar-banner/', views.criar_banner, name='criar_banner'),
+    path('criar-categoria/', views.criar_categoria, name='criar_categoria'),
 
 
 ]

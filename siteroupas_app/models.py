@@ -36,40 +36,20 @@ class Categoria(models.Model):
 
 
 class Produto(models.Model):
+    GENERO_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Feminino'),
+    ]
 
-      # define o nome do produto
-      nome = models.CharField(max_length=50)
-
-      # define a marca do produto, se adequando as marcas pedentes na tabela marcas
-      marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
-
-      # define o preco do produto
-      preco = models.CharField(max_length=20)
-
-      # define a cetgoria do produto, como calcado, camiseta...
-      categoria = models.CharField(max_length=20)
-
-      # define o genro para qual o produto foi feito
-      genero = models.CharField(max_length=5, null=True)
-
-      # Define uma relação muitos-para-muitos entre `Produto` e `Marca`.
-      # Especifica o modelo intermediário `MarcaProduto`.
-      marcas = models.ManyToManyField(
-            Marca, 
-            through='MarcaProduto', 
-            related_name='produtos'
-      )
-
-      categorias = models.ManyToManyField(
-            Categoria, 
-            through='CategoriaProduto', 
-            related_name='produtos'
-      )
-
-
-      def __str__(self):
-            # Retorna o nome completo do produto como representação em texto do objeto.
-            return self.nome
+    nome = models.CharField(max_length=50)
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+    preco = models.CharField(max_length=20)
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    genero = models.CharField(max_length=1, choices=GENERO_CHOICES)
+    foto = models.ImageField(upload_to='produtos/', null=True, blank=True)
+    
+    def __str__(self):
+        return self.nome
 
   
 
