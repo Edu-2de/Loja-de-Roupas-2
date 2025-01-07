@@ -88,6 +88,12 @@
             />
             <button class="btn btn-outline-dark" type="submit">Search</button>
           </form>
+
+          <!-- Botões de Login e Registro -->
+          <div class="ms-3">
+            <a href="{% url 'login' %}" class="btn btn-outline-dark me-2">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-dark">Registrar</a>
+          </div>
         </div>
       </nav>
     </header>
@@ -148,10 +154,7 @@
           {% endfor %}
         </ul>
 
-        <div
-          class="swiper-pagination"
-          style="top: 83%;color: #626262; !important;display: none;"
-        ></div>
+        <div class="swiper-pagination"style="top: 83%;color: #626262; !important;display: none;"></div>
         <div
           class="swiper-button-prev"
           style="color: #626262; !important"
@@ -165,12 +168,7 @@
 
     <div class="novos-itens-div mt-5 w-100 d-flex flex-wrap"
       style="height: 60vh">
-      <p
-        class="h1 mt-5"
-        style="color: #626262; margin-left: 6%; font-weight: bolder"
-      >
-        NOVIDADES
-      </p>
+      <p class="h1 mt-5" style="color: #626262; margin-left: 6%; font-weight: bolder">NOVIDADES</p>
 
       <div
         class="w-100 bg-light h-55"
@@ -184,11 +182,7 @@
           {% for produto in produtos %}
           <div class="card mx-2" style="width: 18rem; flex: 0 0 auto">
             {% if produto.foto %}
-            <img
-              src="{{ produto.foto.url }}"
-              class="card-img-top"
-              alt="{{ produto.nome }}"
-            />
+            <img src="{{ produto.foto.url }}"class="card-img-top"alt="{{ produto.nome }}"/>
             {% endif %}
             <div class="card-body">
               <h5 class="card-title">{{ produto.nome }}</h5>
@@ -204,7 +198,7 @@
       class="categoria-div mt-5 w-100 d-flex flex-wrap"
       style="height: 75vh"
     >
-      <p class="h1 mt-5" style="color: #626262; margin-left: 5%">
+      <p class="h1 mt-5"  style="color: #626262; margin-left: 6%; font-weight: bolder">
         PRODUTOS {{ marca_semana.nome|upper }}
       </p>
 
@@ -232,7 +226,7 @@
         </div>
         {% empty %}
         <div class="text-center w-100">
-          <p>Nenhum produto disponível desta marca no momento.</p>
+          <p class="h5 mt-4">Não há produtos disponíveis desta marca no momento.</p>
         </div>
         {% endfor %}
       </div>

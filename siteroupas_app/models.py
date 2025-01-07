@@ -39,6 +39,7 @@ class Produto(models.Model):
     GENERO_CHOICES = [
         ('M', 'Masculino'),
         ('F', 'Feminino'),
+        ('U', 'Unissex'),
     ]
 
     nome = models.CharField(max_length=50)
@@ -46,6 +47,7 @@ class Produto(models.Model):
     preco = models.CharField(max_length=20)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     genero = models.CharField(max_length=1, choices=GENERO_CHOICES)
+    cor = models.CharField(max_length=10, null=True, blank=True)
     foto = models.ImageField(upload_to='produtos/', null=True, blank=True)
     
     def __str__(self):
