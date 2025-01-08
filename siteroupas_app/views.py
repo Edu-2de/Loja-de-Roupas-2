@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import ProdutoForm, MarcaForm, BannerForm, CategoriaForm, LoginForm, RegisterForm
-from .models import Produto, Marca, Banner
+from .forms import ProductForm, BrandForm, BannerForm, CategoryForm, ColorForm, LoginForm, RegisterForm
+from .models import Product, Brand, Banner
 from random import choice
 from datetime import datetime, timedelta
 from django.core.cache import cache
@@ -10,68 +10,91 @@ from django.contrib.auth.models import Group
 
 # Create your views here.
 def home(request):
-    marcas = Marca.objects.all()
+    brands = Brand.objects.all()
     banners = Banner.objects.all().order_by('-id')[:3]
-    produtos = Produto.objects.all().order_by('-id')[:10]
+    products = Product.objects.all().order_by('-id')[:10]
 
-    # Lógica para marca da semana
-    CACHE_KEY = 'marca_semana'
-    marca_semana = cache.get(CACHE_KEY)
+    # Logic for brand of the week
+    CACHE_KEY = 'brand_of_the_week'
+    brand_of_the_week = cache.get(CACHE_KEY)
     
-    if marca_semana is None:
-        # Se não houver marca em cache, seleciona uma nova
-        todas_marcas = list(Marca.objects.all())
-        if todas_marcas:
-            marca_semana = choice(todas_marcas)
-            # Cache por 7 dias
-            cache.set(CACHE_KEY, marca_semana.id, 60*60*24*7)
+    if brand_of_the_week is None:
+        # If there is no brand in cache, select a new one
+        all_brands = list(Brand.objects.all())
+        if all_brands:
+            brand_of_the_week = choice(all_brands)
+            # Cache for 7 days
+            cache.set(CACHE_KEY, brand_of_the_week.id, 60*60*24*7)
     else:
-        marca_semana = Marca.objects.get(id=marca_semana)
+        brand_of_the_week = Brand.objects.get(id=brand_of_the_week)
 
-    # Pega os últimos produtos da marca selecionada
-    # Primeiro, pegamos os IDs dos produtos novidades
-    produtos_novidades_ids = set(produtos.values_list('id', flat=True))
+    # Get the latest products of the selected brand
+    # First, we get the IDs of the new products
+    new_products_ids = set(products.values_list('id', flat=True))
     
-    # Depois, filtramos os produtos da marca excluindo os IDs das novidades
-    produtos_marca_semana = (Produto.objects
-                           .filter(marca=marca_semana)
-                           .exclude(id__in=produtos_novidades_ids)
-                           .order_by('-id')[:5])
+    # Then, we filter the products of the brand excluding the IDs of the new products
+    brand_of_the_week_products = (Product.objects
+                               .filter(brand=brand_of_the_week)
+                               .exclude(id__in=new_products_ids)
+                               .order_by('-id')[:5])
 
     return render(request, 'index.html', {
-        'marcas': marcas,
+        'brands': brands,
         'banners': banners,
-        'produtos': produtos,
-        'marca_semana': marca_semana,
-        'produtos_marca_semana': produtos_marca_semana,
+        'products': products,
+        'brand_of_the_week': brand_of_the_week,
+        'brand_of_the_week_products': brand_of_the_week_products,
     })
 
 
-def criar_produto(request):
+def create_product(request):
+    """
+    View to create a new product.
+
+    This view is accessed when the user navigates to the 'create_product' URL.
+    It renders a form to input the product details.
+    After the form is submitted, the product is saved to the database and the user is redirected to the home page.
+    """
     if request.method == 'POST':
-        form = ProdutoForm(request.POST, request.FILES)
+        # Create a form instance with the submitted data and files
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
+            # Save the form data to the database
             form.save()
-            return redirect('home')  # Redireciona para a página inicial após salvar
+            # Redirect to the home page after saving
+            return redirect('home')
     else:
-        form = ProdutoForm()
+        # Create an empty form instance
+        form = ProductForm()
     
-    return render(request, 'criar_produto.html', {'form': form})
+    # Render the create_product template with the form
+    return render(request, 'create_product.html', {'form': form})
 
 
-def criar_marca(request):
+def create_brand(request):
+    """
+    View to create a new brand.
+
+    This view is accessed when the user navigates to the 'create_brand' URL.
+    It renders a form to input the brand's name and logo.
+    After the form is submitted, the brand is saved to the database and the user is redirected to the home page.
+    """
     if request.method == 'POST':
-        form = MarcaForm(request.POST, request.FILES)
+        # Create a form with the POST data
+        form = BrandForm(request.POST, request.FILES)
         if form.is_valid():
+            # Save the form and redirect to the home page
             form.save()
             return redirect('home')
     else:
-        form = MarcaForm()
+        # Create an empty form
+        form = BrandForm()
     
-    return render(request, 'criar_marca.html', {'form': form})
+    # Render the form in the 'create_brand.html' template
+    return render(request, 'create_brand.html', {'form': form})
 
 
-def criar_banner(request):
+def create_banner(request):
     if request.method == 'POST':
         form = BannerForm(request.POST, request.FILES)
         if form.is_valid():
@@ -80,19 +103,30 @@ def criar_banner(request):
     else:
         form = BannerForm()
     
-    return render(request, 'criar_banner.html', {'form': form})
+    return render(request, 'create_banner.html', {'form': form})
 
 
-def criar_categoria(request):
+def create_color(request):
     if request.method == 'POST':
-        form = CategoriaForm(request.POST)
+        form = ColorForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('home')
     else:
-        form = CategoriaForm()
+        form = ColorForm()
     
-    return render(request, 'criar_categoria.html', {'form': form})
+    return render(request, 'create_color.html', {'form': form})
+
+def create_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = CategoryForm()
+    
+    return render(request, 'create_category.html', {'form': form})
 
 
 def register_view(request):
@@ -100,9 +134,9 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Adiciona o usuário ao grupo 'Usuario'
-            grupo_usuario = Group.objects.get_or_create(name='Usuario')[0]
-            user.groups.add(grupo_usuario)
+            # Add the user to the 'User' group
+            user_group = Group.objects.get_or_create(name='User')[0]
+            user.groups.add(user_group)
             login(request, user)
             return redirect('home')
     else:
@@ -130,20 +164,18 @@ def logout_view(request):
     return redirect('home')
 
 
-# Decorator para verificar se o usuário é admin
+# Decorator to check if the user is an admin
 def is_admin(user):
     return user.groups.filter(name='Admin').exists()
 
 
-# View protegida que só pode ser acessada por admins
+# View protected by the is_admin decorator
 @user_passes_test(is_admin)
 def admin_dashboard(request):
     return render(request, 'admin_dashboard.html')
 
 
-# View protegida que só pode ser acessada por usuários logados
+# View protected by the login_required decorator
 @login_required
 def user_profile(request):
     return render(request, 'user_profile.html')
-
-

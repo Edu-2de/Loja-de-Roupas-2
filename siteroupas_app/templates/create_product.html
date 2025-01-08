@@ -6,6 +6,17 @@
     <title>Criar Produto</title>
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* CSS */
+        .color-circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -29,5 +40,22 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // JavaScript
+        $(document).ready(function() {
+            $('.form-select[data-color-picker="true"]').each(function() {
+            var $select = $(this);
+            var $options = $select.find('option');
+            $options.each(function() {
+                var $option = $(this);
+                var colorCode = $option.data('color-code');
+                if (colorCode) {
+                $option.append('<span class="color-circle" style="background-color: ' + colorCode + '"></span>');
+                }
+            });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -2,101 +2,106 @@ from django.db import models
 
 # Create your models here.
 
-class Marca(models.Model):
+class Brand(models.Model):
+    # Field to store the full name of the brand.
+    name = models.CharField(max_length=50)
 
-      # Campo para armazenar o nome completo da marca.
-      nome = models.CharField(max_length=50)
+    # New field for the logo
+    logo = models.ImageField(upload_to='brands_logos/', null=True, blank=True)
 
-      # armazena a cor principal da marca
-      cor = models.CharField(max_length=10)
-
-      # Novo campo para a logo
-      logo = models.ImageField(upload_to='marcas_logos/', null=True, blank=True)
-
-
-      def __str__(self):
-            # Retorna o nome completo da marca como representação em texto do objeto.
-            return self.nome
+    def __str__(self):
+        # Returns the full name of the brand as a text representation of the object.
+        return self.name
 
 
 
 
 
-class Categoria(models.Model):
+class Category(models.Model):
+    # Field to store the full name of the category.
+    name = models.CharField(max_length=50)
 
-      # Campo para armazenar o nome completo da marca.
-      nome = models.CharField(max_length=50)
-
-      def __str__(self):
-            # Retorna o nome completo da categoria como representação em texto do objeto.
-            return self.nome
-
+    def __str__(self):
+        # Returns the full name of the category as a text representation of the object.
+        return self.name
 
 
 
-
-class Produto(models.Model):
-    GENERO_CHOICES = [
-        ('M', 'Masculino'),
-        ('F', 'Feminino'),
-        ('U', 'Unissex'),
+class Product(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('U', 'Unisex'),
     ]
 
-    nome = models.CharField(max_length=50)
-    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
-    preco = models.CharField(max_length=20)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
-    genero = models.CharField(max_length=1, choices=GENERO_CHOICES)
-    cor = models.CharField(max_length=10, null=True, blank=True)
-    foto = models.ImageField(upload_to='produtos/', null=True, blank=True)
+    name = models.CharField(max_length=50)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    price = models.CharField(max_length=20)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    photo = models.ImageField(upload_to='products/', null=True, blank=True)
     
     def __str__(self):
-        return self.nome
-
-  
+        return self.name
 
 
+class Color(models.Model):
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=7)
 
-class MarcaProduto(models.Model):
-
-      # Relaciona o produto á marca, com remoção em cascata e permite valor nulo.
-      produto = models.ForeignKey(Produto, on_delete=models.CASCADE, null=True)
-
-      # Relaciona a marca ao produto, com remoção em cascata e permite valor nulo.
-      marca = models.ForeignKey(Marca, on_delete=models.CASCADE, null=True)
-
-      # Representa a relação em texto com os IDs do produto e da marca.
-      def __str__(self):
-            return f"Produto ID {self.produto.id} - Marca ID {self.marca.id}"
+    def __str__(self):
+        return self.name
+    def get_color_code(self):
+        return self.code
 
 
+class ProductColor(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.color.name}"
+
+class BrandProduct(models.Model):
+    # Relates the product to the brand, with cascade deletion and allows null values.
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+
+    # Relates the brand to the product, with cascade deletion and allows null values.
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=True)
+
+    # Represents the relationship in text with the IDs of the product and brand.
+    def __str__(self):
+        return f"Product ID {self.product.id} - Brand ID {self.brand.id}"
 
 
 
-class CategoriaProduto(models.Model):
+class CategoryProduct(models.Model):
+    # Relates the product to the category, with cascade deletion and allows null values.
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
 
-      # Relaciona o produto á marca, com remoção em cascata e permite valor nulo.
-      produto = models.ForeignKey(Produto, on_delete=models.CASCADE, null=True)
+    # Relates the category to the product, with cascade deletion and allows null values.
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
-      # Relaciona a categoria ao produto, com remoção em cascata e permite valor nulo.
-      Categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, null=True)
-
-      # Representa a relação em texto com os IDs do produto e da categoria.
-      def __str__(self):
-            return f"Produto ID {self.produto.id} - Marca ID {self.Categoria.id}"
-
+    # Represents the relationship in text with the IDs of the product and category.
+    def __str__(self):
+        return f"Product ID {self.product.id} - Category ID {self.category.id}"
 
 
 
 class Banner(models.Model):
-      # Campo para armazenar a imagem do banner
-      foto = models.ImageField(upload_to='banners/')
-      
-      # Relacionamento com a marca usando ForeignKey
-      marca = models.ForeignKey(Marca, on_delete=models.CASCADE, related_name='banners')
+    # Field to store the banner image
+    photo = models.ImageField(upload_to='banners/')
 
-      def __str__(self):
-            return f"Banner da marca {self.marca.nome}"
+    # Relationship with the brand using ForeignKey
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='banners', null=True)
 
+    def __str__(self):
+        return f"Banner of brand {self.brand.name}"
+    
 
+class BrandColor(models.Model):
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.brand.name} - {self.color.name}"
